@@ -17,15 +17,22 @@ def format_remaining(entry: dict) -> str:
 
 def format_dashboard(entries: list[dict], year: int, month: int) -> str:
     lines = [f"**Budget Dashboard — {month:02d}/{year}**"]
+    total = 0.0
+    bills = 0.0
     for entry in entries:
         allowance = entry["allowance"]
         spent = entry["spent"]
+        total += spent
+        if entry["category"] == "Bills":
+            bills += spent
         if allowance is None:
             lines.append(f"• {entry['category']}: ${spent:.2f} spent (no limit)")
         else:
             remaining = entry["remaining"]
             flag = " ⚠️" if remaining < 0 else ""
             lines.append(f"• {entry['category']}: ${spent:.2f} / ${allowance:.2f} (${remaining:.2f} left{flag})")
+    lines.append(f"Total: ${total:.2f} spent")
+    lines.append(f"Discretionary: ${total - bills:.2f} spent")
     return "\n".join(lines)
 
 
