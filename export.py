@@ -11,7 +11,7 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
-from budget import get_dashboard, get_expenses
+from budget import get_dashboard, get_expenses, get_event_expenses_for_month
 from categories import all_categories
 from month_utils import previous_month
 
@@ -27,6 +27,7 @@ CATEGORY_TO_FILE = {
     "Grooming": "grooming.csv",
     "Subscriptions": "subscriptions.csv",
     "Projects": "projects.csv",
+    "Rainy Day": "rainy_day.csv",
 }
 
 
@@ -52,6 +53,16 @@ def write_month_csvs(year: int, month: int, dest_root: Path) -> Path:
         writer.writerow(["Category", "Allowance", "Usage"])
         for entry in get_dashboard(year, month):
             writer.writerow([entry["category"], entry["allowance"] if entry["allowance"] is not None else "", entry["spent"]])
+
+    event_rows = get_event_expenses_for_month(year, month)
+    if event_rows:
+        with open(out_dir / "events.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Event", "Category", "Item", "Charge", "Date", "Description"])
+            for row in event_rows:
+                d = datetime.fromisoformat(row["date"]).strftime("%m-%d-%Y")
+                writer.writerow([row["event_name"], row["category"], row["item"],
+                                 row["amount"], d, row["description"] or ""])
 
     return out_dir
 

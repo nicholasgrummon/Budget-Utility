@@ -13,6 +13,7 @@ DEFAULT_ALLOWANCES = {
     "Bills": None,
     "Transportation": 150,
     "Grooming": None,
+    "Rainy Day": None,
 }
 
 ALIASES = {
@@ -31,6 +32,12 @@ ALIASES = {
     "transportation": "Transportation",
     "transport": "Transportation",
     "grooming": "Grooming",
+    "rainy": "Rainy Day",
+    "rainy day": "Rainy Day",
+    "rainyday": "Rainy Day",
+    "one-time": "Rainy Day",
+    "onetime": "Rainy Day",
+    "irregular": "Rainy Day",
 }
 
 
